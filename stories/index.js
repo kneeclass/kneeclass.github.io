@@ -1,15 +1,23 @@
 import React from 'react';
 import { addDecorator,storiesOf } from '@storybook/react';
-import { withKnobs, text} from '@storybook/addon-knobs';
-import { withOptions } from '@storybook/addon-options';
-import { themes } from '@storybook/components';
+import ReactMarkdown from 'react-markdown';
+//components
 import Button from './button/button.js'
 import SimpleList from './lists/simpleList.js'
+import Introduction from './introduction/introduction.js'
+
+//md
+import Markdown from './introduction/text.md'
+
+//addons
+import { withKnobs, text} from '@storybook/addon-knobs';
+import { withOptions } from '@storybook/addon-options';
+import { withInfo } from '@storybook/addon-info';
 
 addDecorator(
   withOptions({
     name: 'Konsumentverket Designsystem',
-    
+    hierarchySeparator: /\|/ 
   })
 );
 
@@ -33,7 +41,18 @@ const CenterDecorator = (storyFn) => (
 );
 
 
-const buttonStories = storiesOf('Button', module)
+storiesOf('Documentation', module)
+  .add(
+    'Välkommen',
+    withInfo()(() => (
+      <Introduction>
+        <ReactMarkdown source={Markdown} />
+      </Introduction>
+    )),
+  );
+
+
+const buttonStories = storiesOf('Komponenter|Knappar', module)
 .addDecorator(CenterDecorator)
 buttonStories.addDecorator(withKnobs);
 buttonStories.add('Knapp 1', () => {
@@ -42,7 +61,7 @@ buttonStories.add('Knapp 1', () => {
 });
 
 
-const listStories = storiesOf('Lists', module)
+const listStories = storiesOf('Komponenter|Listor', module)
 .addDecorator(CenterDecorator)
 listStories.add('Enkel lista', () => {
   
