@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@storybook/addon-info": "^4.1.11",
+    "graphql-request": "^1.8.2",
     "node-sass": "^4.11.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

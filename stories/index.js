@@ -12,7 +12,10 @@ import Markdown from './introduction/text.md'
 //addons
 import { withKnobs, text} from '@storybook/addon-knobs';
 import { withOptions } from '@storybook/addon-options';
-import { withInfo } from '@storybook/addon-info';
+
+
+//graphql
+import { GraphQLClient } from 'graphql-request'
 
 addDecorator(
   withOptions({
@@ -40,15 +43,44 @@ const CenterDecorator = (storyFn) => (
   </div>
 );
 
+const query = `{
+  nyheterCollection(limit: 100){
+    items{
+      titel
+      }
+  }
+}`
+
+
+var request = new XMLHttpRequest();
+request.open("POST", 'https://graphql.contentful.com/content/v1/spaces/fpxuvij189yu', false);
+request.setRequestHeader('authorization', "Bearer 6cd1c7ece94e09c69ee47b75f6f1c1a47d5edd59f8558d6ebd7d25d731466630")
+request.setRequestHeader('Content-Type', "application/json")
+request.send(JSON.stringify({
+  query,
+}));  
+
+if (request.status === 200) {
+  var response = JSON.parse(request.responseText)
+  response.data.nyheterCollection.items.forEach(i => {
+    storiesOf('Documentation', module)
+      .add(i.titel,() => (
+          <p>{i.titel}</p>
+        ),
+      );
+  });
+
+}
+
+
 
 storiesOf('Documentation', module)
   .add(
-    'Välkommen',
-    withInfo()(() => (
+    'Välkommen',() => (
       <Introduction>
         <ReactMarkdown source={Markdown} />
       </Introduction>
-    )),
+    ),
   );
 
 
