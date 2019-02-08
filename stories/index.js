@@ -6,6 +6,7 @@ import mdBreaks from 'remark-breaks'
 import Button from './button/button.js'
 import SimpleList from './lists/simpleList.js'
 import Introduction from './introduction/introduction.js'
+import ContentfulPage from'./contentfulPage/contentfulPage.js'
 
 //md
 import Markdown from './introduction/text.md'
@@ -77,15 +78,16 @@ request.send(JSON.stringify({
   query,
 }));  
 
+
 if (request.status === 200) {
   var response = JSON.parse(request.responseText)
   response.data.designsystemSidaCollection.items.forEach(i => {
     storiesOf('Documentation', module)
       .add(i.titel,() => (
-          <>
+          <ContentfulPage>
             <h1>{i.rubrik}</h1>
             <ReactMarkdown source={i.text} plugins={[mdBreaks]} />
-          </>
+          </ContentfulPage>
         ),
       );
   });
