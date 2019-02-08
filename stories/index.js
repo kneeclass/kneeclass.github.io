@@ -1,6 +1,7 @@
 import React from 'react';
 import { addDecorator,storiesOf } from '@storybook/react';
 import ReactMarkdown from 'react-markdown';
+import mdBreaks from 'remark-breaks'
 //components
 import Button from './button/button.js'
 import SimpleList from './lists/simpleList.js'
@@ -43,12 +44,28 @@ const CenterDecorator = (storyFn) => (
   </div>
 );
 
+
+storiesOf('Documentation', module)
+.addDecorator(CenterDecorator)
+  .add(
+    'Välkommen',() => (
+      <Introduction>
+        <ReactMarkdown source={Markdown} />
+      </Introduction>
+    ),
+  );
+
 const query = `{
-  nyheterCollection(limit: 100){
-    items{
-      titel
+  designsystemSidaCollection{
+  	items{
+      sys{
+        id
       }
-  }
+      titel
+      rubrik
+      text
+    }
+	}
 }`
 
 
@@ -62,10 +79,13 @@ request.send(JSON.stringify({
 
 if (request.status === 200) {
   var response = JSON.parse(request.responseText)
-  response.data.nyheterCollection.items.forEach(i => {
+  response.data.designsystemSidaCollection.items.forEach(i => {
     storiesOf('Documentation', module)
       .add(i.titel,() => (
-          <p>{i.titel}</p>
+          <>
+            <h1>{i.rubrik}</h1>
+            <ReactMarkdown source={i.text} plugins={[mdBreaks]} />
+          </>
         ),
       );
   });
@@ -73,15 +93,6 @@ if (request.status === 200) {
 }
 
 
-
-storiesOf('Documentation', module)
-  .add(
-    'Välkommen',() => (
-      <Introduction>
-        <ReactMarkdown source={Markdown} />
-      </Introduction>
-    ),
-  );
 
 
 const buttonStories = storiesOf('Komponenter|Knappar', module)
