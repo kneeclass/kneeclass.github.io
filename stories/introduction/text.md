@@ -1,1 +1,0 @@
-![](https://www.konsumentverket.se/static/Images/logo.svg)
